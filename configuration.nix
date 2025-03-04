@@ -22,9 +22,11 @@
 
   ## NETWORKING
   networking = {
-    hostName = "homelab";
+    # ipv4
+    useDHCP = true;
+
+    # ipv6
     enableIPv6 = true;
-    useDHCP = false;
     interfaces.enp1s0 = {
       ipv6.addresses = [
         {
@@ -32,30 +34,13 @@
           prefixLength = 64;
         }
       ];
-      ipv4.addresses = [
-        {
-          address = "49.12.185.52";
-          prefixLength = 32;
-        }
-      ];
-    };
-    defaultGateway = {
-      address = "172.31.1.1";
-      interface = "enp1s0";
     };
     defaultGateway6 = {
       address = "fe80::1";
       interface = "enp1s0";
     };
 
-    # Quad9
-    nameservers = [
-      "9.9.9.9"
-      "149.112.112.112"
-      "2620:fe::fe"
-      "2620:fe::9"
-    ];
-
+    # firewall
     firewall.enable = true;
     firewall.allowedTCPPorts = [
       80 # nginx http
@@ -74,9 +59,19 @@
       PermitRootLogin = "no";
     };
   };
-  services.fail2ban.enable = true;
+  services.fail2ban = {
+    enable = true;
+    maxretry = 3; # Ban IP after 3 failures
+    bantime = "24h"; # Ban IPs for one day on the first ban
+  };
 
-  ## CI - HOMEPAGE
+  ## USERS
+  users.mutableUsers = false;
+
+  # - root -
+  users.users.root.hashedPasswordFile = "/root/hashedPassword";
+
+  # - deploy (homepage) -
   users.groups.www = { };
   users.users.www = {
     isNormalUser = true;
@@ -102,7 +97,7 @@
     };
   };
 
-  ## BEHRN
+  # - behrn -
   users.users.behrn = {
     isNormalUser = true;
     extraGroups = [
@@ -127,9 +122,6 @@
       ];
     }
   ];
-
-  # ROOT
-  users.users.root.hashedPassword = "$y$j9T$gwUVzCIiyNDk5Ybtjtfep.$yaqYMsIBQMMj/5AS92p3WWkpIAuEdHp6T8YEh5ORjl/";
 
   system.stateVersion = "24.11";
 }

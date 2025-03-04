@@ -47,6 +47,16 @@
               targetUser = "behrn";
               buildOnTarget = true;
               keys = {
+                ## ROOT
+                "hashedPassword" = {
+                  keyCommand = [
+                    "op"
+                    "read"
+                    "op://Personal/homelab-root/hashedPassword"
+                  ];
+                  destDir = "/root";
+                };
+
                 ## BORG
                 "borg_passphrase" = {
                   keyCommand = [
