@@ -1,3 +1,5 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## Restore from Backup
 1. adapt dns entries
 2. adapt ip-addresses in configuration.nix
